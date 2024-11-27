@@ -72,3 +72,18 @@ Medical history: {self.read_medical_history()}"""
 
 # test_patient = Patient("Sam", "email", "male", "0812", 62811, "P001", test_med_history)
 # print(test_patient)
+
+class MedicalRecord:
+    def __init__(self, illness: str, symptoms: str, treatment: str):
+        self.illness = illness
+        self.symptoms = symptoms
+        self.treatment = treatment
+
+    def summary(self):
+        return f"""Illness: {self.illness}
+Symptoms: {self.symptoms}
+Treatment: {self.treatment}"""
+    
+# TODO: integrate MedicalRecord object to the medical_history attirbute of Patient object.
+# test_med_record = MedicalRecord("COVID-19", "Fever, fatigue", "Prescribed high vitamin D drugs")
+# print(test_med_record.summary())
