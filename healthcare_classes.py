@@ -16,7 +16,7 @@ Gender: {self.gender}
 DOB: {self.date_of_birth}
 Phone: {self.phone_number}"""
     
-# test_person = Person("Sam", "email", "male", "1212", 811)
+test_person = Person("Evan", "email", "male", "1212", 811)
 # print(test_person)
 
 class Doctor(Person):
@@ -32,7 +32,7 @@ Doctor ID: {self.doctor_id}
 Specialization: {self.specialization} {super().__str__()}
 Office: {self.office}"""
     
-# test_doctor = Doctor("Sam", "email", "male", "0812", 62811, "D001", "Neurology", "Lavenue")
+test_doctor = Doctor("Jorel", "email", "male", "0812", 62811, "D001", "Neurology", "Lavenue")
 # print(test_doctor)
 
 class Patient(Person):
@@ -65,12 +65,12 @@ class Patient(Person):
 Patient ID: {self.patient_id} {super().__str__()}
 Medical history: {self.read_medical_history()}"""
     
-# test_med_history = ["Flu", "TB", "COVID-19"]
+test_med_history = ["Flu", "TB", "COVID-19"]
 # test_med_history = [""]
 # test_med_history = []
 # test_med_history = ["Flu"]
 
-# test_patient = Patient("Sam", "email", "male", "0812", 62811, "P001", test_med_history)
+test_patient = Patient("Sam", "email", "male", "0812", 62811, "P001", test_med_history)
 # print(test_patient)
 
 class MedicalRecord:
@@ -87,3 +87,36 @@ Treatment: {self.treatment}"""
 # TODO: integrate MedicalRecord object to the medical_history attirbute of Patient object.
 # test_med_record = MedicalRecord("COVID-19", "Fever, fatigue", "Prescribed high vitamin D drugs")
 # print(test_med_record.summary())
+
+class AppointmentDetail:
+    def __init__(self, appointment_id: str, appointment_date: str):
+        self.appointment_id = appointment_id
+        self.appointment_date = appointment_date
+
+    def set_appointment_date(self, new_date):
+        self.appointment_date = new_date
+    
+    def summary(self):
+        return f"Appointment ID: {self.appointment_id}\nDate: {self.appointment_date}"
+    
+test_appointment_detail = AppointmentDetail("A001", "1234")
+# print(test_appointment_detail.summary())
+
+class Appointment:
+    def __init__(self, patient: Patient, doctor: Doctor, appointment_detail: AppointmentDetail):
+        self.patient = patient
+        self.doctor = doctor
+        self.appointment_detail = appointment_detail
+    
+    def add_patient_history(self):
+        pass
+        # this is in the OODB diagram, don't understand what it does
+        # TODO: ask Evan what it means and its purpose
+
+    def summary(self):
+        return f"""{self.appointment_detail.summary()}
+Patient: {self.patient.patient_id}
+Doctor: {self.doctor.doctor_id}"""
+    
+test_appointment = Appointment(test_patient, test_doctor, test_appointment_detail)
+# print(test_appointment.summary())
