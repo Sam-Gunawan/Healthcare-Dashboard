@@ -87,27 +87,34 @@ Medical history: {self.read_medical_history()}"""
 test_med_history = [test_med_record, test_med_record2]
 
 test_patient = Patient("Sam", "email", "male", "0812", 62811, "P001", test_med_history)
-print(test_patient)
+# print(test_patient)
 
 class AppointmentDetail:
-    def __init__(self, appointment_id: str, appointment_date: str):
+    def __init__(self, patient: Patient, appointment_id: str, appointment_date: str, complaint: str):
+        self.patient = patient
         self.appointment_id = appointment_id
         self.appointment_date = appointment_date
+        self.complaint = complaint
 
     def set_appointment_date(self, new_date):
         self.appointment_date = new_date
     
     def summary(self):
-        return f"Appointment ID: {self.appointment_id}\nDate: {self.appointment_date}"
+        return f"""Patient ID: {self.patient.patient_id}
+Appointment ID: {self.appointment_id}
+Date: {self.appointment_date}
+Complaint: {self.complaint}"""
     
-test_appointment_detail = AppointmentDetail("A001", "1234")
+test_appointment_detail = AppointmentDetail(test_patient,"A001", "1234", "My head is dizzy")
 # print(test_appointment_detail.summary())
 
-class Appointment:
-    def __init__(self, patient: Patient, doctor: Doctor, appointment_detail: AppointmentDetail):
-        self.patient = patient
+class AppointmentResult:
+    def __init__(self, doctor: Doctor, appointment_detail: AppointmentDetail, illness: str, symptoms: str, treatment: str):
         self.doctor = doctor
         self.appointment_detail = appointment_detail
+        self.illness = illness
+        self.symptoms = symptoms
+        self.treatment = treatment
     
     def add_patient_history(self):
         pass
@@ -116,8 +123,11 @@ class Appointment:
 
     def summary(self):
         return f"""{self.appointment_detail.summary()}
-Patient: {self.patient.patient_id}
-Doctor: {self.doctor.doctor_id}"""
+---Results---
+Doctor: {self.doctor.doctor_id}
+Illness: {self.illness}
+Symptoms: {self.symptoms}
+Treatment: {self.treatment}"""
     
-test_appointment = Appointment(test_patient, test_doctor, test_appointment_detail)
-# print(test_appointment.summary())
+test_appointment = AppointmentResult(test_doctor, test_appointment_detail, "Diare", "Poop 10x a day", "Diapet")
+print(test_appointment.summary())
