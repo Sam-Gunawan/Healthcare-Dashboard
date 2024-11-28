@@ -25,6 +25,10 @@ class Doctor(Person):
         self.doctor_id = doctor_id
         self.specialization = specialization
         self.office = office
+    
+    def finish_appointment(self, illness: str, symptoms: str, treatment: str):
+        pass
+        # TODO
 
     def __str__(self):
         return f"""
@@ -74,16 +78,25 @@ class Patient(Person):
         readable_history += self.medical_history[-1].illness
 
         return readable_history
+    
+    def make_appointment(self, date: str, complaint: str):
+        pass
+        # TODO
+
+    def reschedule_appointment(self, appointment_id: str, new_date: str):
+        pass
+        # TODO
+
+    def add_patient_history(self, illness: str, symptoms: str, treatment: str):
+        pass
+        # TODO
 
     def __str__(self):
         return f"""
 Patient ID: {self.patient_id} {super().__str__()}
 Medical history: {self.read_medical_history()}"""
     
-# test_med_history = ["Flu", "TB", "COVID-19"]
-# test_med_history = [""]
 # test_med_history = []
-# test_med_history = ["Flu"]
 test_med_history = [test_med_record, test_med_record2]
 
 test_patient = Patient("Sam", "email", "male", "0812", 62811, "P001", test_med_history)
@@ -115,11 +128,6 @@ class AppointmentResult:
         self.illness = illness
         self.symptoms = symptoms
         self.treatment = treatment
-    
-    def add_patient_history(self):
-        pass
-        # this is in the OODB diagram, don't understand what it does
-        # TODO: ask Evan what it means and its purpose
 
     def summary(self):
         return f"""{self.appointment_detail.summary()}
