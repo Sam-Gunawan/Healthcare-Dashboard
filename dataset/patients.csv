@@ -1,4 +1,4 @@
-﻿patient_id;name;gender;dob;contact;email
+﻿Patient ID;Name;Gender;Date of Birth;Contact;Email
 P001;Lisa Lopez;Female;02/04/1955;08822-8853-2188;lisa.lopez_1@healthfirst.com
 P002;Charles Miller;Male;02/08/1970;08864-9235-9509;charles.miller_2@healthfirst.com
 P003;David Young;Male;06/05/2003;08719-4115-6442;david.young_3@healthfirst.com
