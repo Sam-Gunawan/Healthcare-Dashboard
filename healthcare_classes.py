@@ -118,7 +118,7 @@ Appointment ID: {self.appointment_id}
 Date: {self.appointment_date}
 Complaint: {self.complaint}"""
     
-test_appointment_detail = AppointmentDetail(test_patient,"A001", "1234", "My head is dizzy")
+test_appointment_detail = AppointmentDetail(test_patient, "A001", "1234", "My head is dizzy")
 # print(test_appointment_detail.summary())
 
 class AppointmentResult:
