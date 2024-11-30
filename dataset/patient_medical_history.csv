@@ -1,0 +1,51 @@
+﻿patient_id;medical_history
+P001;Hypertension
+P001;Mild Stroke
+P002;Asthma
+P002;Bronchiectasis
+P003;Allergies
+P003;Hives
+P004;None
+P005;Asthma
+P005;Gerd
+P006;None
+P007;Hypertension
+P007;Kidney Disease
+P008;Asthma
+P008;High Fever
+P009;Diabetes
+P009;Pancreatitis
+P010;Heart Condition
+P010;Arrhythmias
+P011;Allergies
+P011;Asthma
+P012;Allergies
+P012;Hay Fever
+P013;Allergies
+P013;Sinusitis
+P014;Asthma
+P014;Obesity
+P015;Allergies
+P015;Hives
+P016;Allergies
+P016;Eczema
+P017;Hypertension
+P017;Bradycardia
+P018;Allergies
+P019;Goiter
+P019;Hyperthyroidism
+P020;Asthma
+P021;Broken Bones
+P021;Osteoporosis
+P022;Osterporosis
+P022;Scoliosis
+P023;Hypertension
+P024;Allergies
+P025;Diabetes
+P026;Asthma
+P026;COVID-19
+P027;Heart Condition
+P028;Asthma
+P029;Tetanus
+P029;Muscle Dystrophy
+P030;Heart Condition
