@@ -77,12 +77,9 @@ def load_data(chosen_table: str):
     # dataframe from chosen table
     # NOTE: CSV filename MUST BE in format of "{option_title}s.csv", e.g. patients has Patient when displayed in UI, so csv filename should be patients.csv
     try:
-        df = pd.read_csv(f".\dataset\{chosen_table.lower()}s.csv", sep=";")
+        df = pd.read_csv(f"./dataset/{chosen_table.lower()}s.csv", sep=";")
     except:
         st.write("No data found")
-
-    # st.write(df)
-    
     return df
 
 chosen_table = option_menu(None, ["Patient", "Doctor",  "Appointment"], 
@@ -105,26 +102,6 @@ elif chosen_table == "Doctor":
 elif chosen_table == "Appointment":
     search_value, filter = init_search_value(["Appointment ID", "Date", "Diagnostic", "Symptoms", "Treatment"])
     attr_id, attr_name = 'Appointment ID', None
-
-    # # convert names and search value to uppercase to account for different letter casings when searching
-    # df['Name'] = df['Name'].astype(str).str.upper()
-
-    # if filter == "Patient ID":
-    #     mask = df['Patient ID'].str.contains(search_value)
-    # else:
-    #     mask = df[f'{filter}'].str.startswith(search_value)
-
-    # df_search = df[mask]
-
-    # df_search['Name'] = df_search['Name'].astype(str).str.title()
-
-    # if df_search.empty:
-    #     st.markdown("### No patient found")
-
-    # elif search_value:
-    #     st.write(df_search)
-
-    # NOTE keep the above commented code for reference first, delete later.
 
 df_search = search_result(df, search_value, filter, attr_id, attr_name)
 display_search_result(chosen_table, df_search)
