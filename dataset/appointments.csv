@@ -1,0 +1,31 @@
+﻿Appointment ID;Date;Status;Complaints;Symptoms;Diagnostic;Treatment
+A001;12/20/2024;completed;I am having trouble speaking clearly.;Speech Impairment;Stroke;ACE inhibitors
+A002;12/27/2024;pending;I feel like I can't catch my breath.;Shortness of Breathe;[TBA];[TBA]
+A003;2/25/2025;completed;I have itchy red patches on my skin.;Skin Rash;Allergic Reaction;anti-inflammatory cream
+A004;2/23/2025;pending;I have a persistent cough.;Coughing;[TBA];[TBA]
+A005;02/11/2025;completed;I have chest pain that won’t go away.;Chest Pain;GERD;anti-inflammatory inhalers.
+A006;01/08/2025;pending;My nose keeps running nonstop.;Runny Nose;[TBA];[TBA]
+A007;1/18/2025;completed;It hurts when I urinate.;Painful Excretion;Kidney Disease;diuretics
+A008;2/25/2025;completed;I have a high fever and a bad cough.;Coughing;Respiratory Infection;antipyretics
+A009;12/10/2024;completed;I feel extremely tired all the time.;Fatigue;Diabetes;Insulin
+A010;1/21/2025;pending;I feel dizzy and lightheaded.;Lightheadedness;[TBA];[TBA]
+A011;12/30/2024;completed;I struggle to breathe properly, especially during allergies.;Shortness of Breathe;Allergic Asthma;Antihistamines
+A012;1/22/2025;pending;I can't smell anything.;Loss of Smell;[TBA];[TBA]
+A013;1/23/2025;completed;My nose is constantly runny due to sinus issues.;Runny Nose;Sinusitis;Nasal decongestants
+A014;12/30/2024;completed;I feel lightheaded and out of breath often.;Diziness;Obesity-Related Hypoxia;Bronchodilators
+A015;02/08/2025;completed;I have red, itchy patches on my body again.;Skin Rash;Hives;Antihistamines
+A016;1/18/2025;pending;My skin feels swollen and itchy.;Swelling;[TBA];[TBA]
+A017;01/12/2025;completed;I keep forgetting things lately.;Memory Problems;Bradycardia;Calcium channel blockers
+A018;01/08/2025;pending;My skin is so itchy, I can't stop scratching.;Itchiness;[TBA];[TBA]
+A019;02/02/2025;completed;I keep experiencing muscle twitches.;Twitching;Hyperthyroidism;methimazole
+A020;2/27/2025;pending;I feel tightness in my chest when breathing.;Shortness of Breathe;[TBA];[TBA]
+A021;01/09/2025;completed;It’s painful to move around.;Limited Mobility;Osteoporosis;Calcium and Vitamin D supplements
+A022;2/27/2025;completed;My posture feels off and tilted.;Titled Posture;Scoliosis;Calcium and Vitamin D supplements
+A023;02/09/2025;completed;I have throbbing headaches often.;Headaches;Hypertension;diuretics
+A024;12/01/2024;pending;My face and hands feel swollen.;Swelling;[TBA];[TBA]
+A025;02/06/2025;pending;I’m losing weight without trying.;Weight Loss;[TBA];[TBA]
+A026;12/18/2024;pending;I can’t smell anything, and I’m wheezing.;Loss of Smell;[TBA];[TBA]
+A027;1/13/2025;completed;I feel tired even after resting.;Fatigue;Heart Failure;Beta-blockers
+A028;12/22/2024;pending;My asthma has been acting up, and I can’t stop coughing.;Coughing;[TBA];[TBA]
+A029;1/19/2025;completed;It’s hard for me to move my muscles.;Limited Mobility;Muscle Dystrophy;Muscle relaxants
+A030;12/01/2024;completed;I feel like the room is spinning.;Diziness;Hypertension;Beta-blockers
