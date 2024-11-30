@@ -73,11 +73,11 @@ def display_search_result(chosen_table, df_search):
         else:
             st.write(df_search)
 
-def load_data(chosen_table):
+def load_data(chosen_table: str):
     # dataframe from chosen table
     # NOTE: CSV filename MUST BE in format of "{option_title}s.csv", e.g. patients has Patient when displayed in UI, so csv filename should be patients.csv
     try:
-        df = pd.read_csv(f".\dataset\{chosen_table}s.csv", sep=";")
+        df = pd.read_csv(f".\dataset\{chosen_table.lower()}s.csv", sep=";")
     except:
         st.write("No data found")
 
