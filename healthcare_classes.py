@@ -1,7 +1,9 @@
 """The collection of class definitions for the healthcare management system"""
+from datetime import date
+import streamlit as st
 
 class Person:
-    def __init__(self, name: str, email: str, gender: str, date_of_birth: str, phone_number: int):
+    def __init__(self, name: str, email: str = "", gender: str = "", date_of_birth: str = "", phone_number: int = ""):
         self.name = name
         self.email = email
         self.gender = gender
@@ -16,11 +18,11 @@ Gender: {self.gender}
 DOB: {self.date_of_birth}
 Phone: {self.phone_number}"""
     
-test_person = Person("Evan", "email", "male", "1212", 811)
+test_person = Person("Evan", "email", "male", "1212")
 # print(test_person)
 
 class Doctor(Person):
-    def __init__(self, name: str, email: str, gender: str, date_of_birth: str, phone_number:str, doctor_id: str, specialization: str, office: str):
+    def __init__(self, name: str, office: str, email: str = "", gender: str = "", date_of_birth: str = "", phone_number:str = "", doctor_id: str = "", specialization: str = ""):
         super().__init__(name, email, gender, date_of_birth, phone_number)
         self.doctor_id = doctor_id
         self.specialization = specialization
@@ -138,4 +140,14 @@ Symptoms: {self.symptoms}
 Treatment: {self.treatment}"""
     
 test_appointment = AppointmentResult(test_doctor, test_appointment_detail, "Diare", "Poop 10x a day", "Diapet")
-print(test_appointment.summary())
+# print(test_appointment.summary())
+
+class Appointment:
+    def __init__(self, appointment_id: str, appointment_date: date, status: bool, complaint: str, symptoms: str = "", diagnose: str = "", treatment: str = ""):
+        self.appointment_id = appointment_id
+        self.appointment_date = appointment_date
+        self.status = status
+        self.complaint = complaint
+        self.symptoms = symptoms
+        self.diagnose = diagnose
+        self.treatment = treatment    
