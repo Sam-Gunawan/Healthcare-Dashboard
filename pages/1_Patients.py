@@ -121,7 +121,7 @@ def appointment_form(current_patient: Patient):
     st.title('Appointment Request Form')
     st.write('Please proceed with your appointment request.')
 
-    appointment_date = st.date_input('Please choose the available date', format="MM/DD/YYYY")
+    appointment_date = st.date_input('Please choose the available date', format="MM/DD/YYYY").strftime("%m/%d/%Y")
     complaint = st.text_input('Describe how you feel')
 
     if st.button('Save Appointment'):
