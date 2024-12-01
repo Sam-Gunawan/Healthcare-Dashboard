@@ -3,12 +3,6 @@ import pandas as pd
 from healthcare_classes import *
 import time
 
-PATIENTS_FILE = "./dataset/patients.csv"
-DOCTORS_FILE = "./dataset/doctors.csv"
-APPOINTMENTS_FILE = "./dataset/appointments.csv"
-PATIENT_MEDICAL_HISTORY_FILE = "./dataset/patient_medical_history.csv"
-APPOINTMENT_ASSIGNMENT_FILE = "./dataset/patient_appointment_doctor.csv"
-
 
 def complete_appointment_form(current_doctor: Doctor, doctor_appointments): 
     st.title('Post-Appointment Form')
@@ -28,8 +22,24 @@ def complete_appointment_form(current_doctor: Doctor, doctor_appointments):
         elif status == "Pending":
             st.warning("Cannot save summary while the status is Pending!")
         else:
-            new_medical_record = current_doctor.complete_appointment(APPOINTMENTS_FILE, appointment_id, diagnostic, symptoms, treatment)
+            patient_df = pd.read_csv(PATIENTS_FILE, sep=';')
+            assigned_appointments_df = pd.read_csv(APPOINTMENT_ASSIGNMENT_FILE, sep=';')
+            current_patient_id = assigned_appointments_df.loc[assigned_appointments_df['appointment_id'] == appointment_id, "patient_id"].astype(str).values[0]
+            patient_data = patient_df[(patient_df['Patient ID'].str.upper() == current_patient_id.upper())].values
             
+            patient_id = patient_data[0][0]
+            patient_name = patient_data[0][1]
+            patient_gender = patient_data[0][2]
+            patient_dob = patient_data[0][3]
+            patient_number = patient_data[0][4]
+            patient_email = patient_data[0][5]
+
+            current_patient = Patient(patient_name, patient_email, patient_gender, patient_dob, patient_number, [""], patient_id)
+            new_medical_record = current_doctor.complete_appointment(APPOINTMENTS_FILE, appointment_id, diagnostic, symptoms, treatment)
+
+            # automatically adds to patient's medical history
+            current_patient.add_medical_history(new_medical_record)
+
             # reset complete appointment form button
             st.session_state.complete_appointment_button = False
             

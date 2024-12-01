@@ -43,7 +43,7 @@ def run_patient_dashboard(patient_id, df):
     patient_number = patient_data[0][4]
     patient_email = patient_data[0][5]
 
-    current_patient = Patient(patient_name, patient_email, patient_gender, patient_dob, patient_number, [""], patient_id) # TODO: implement medical history
+    current_patient = Patient(patient_name, patient_email, patient_gender, patient_dob, patient_number, [""], patient_id)
 
     st.subheader("Profile")
     st.write("Patient ID: ", patient_id)
@@ -52,6 +52,7 @@ def run_patient_dashboard(patient_id, df):
     st.write("DOB: ", patient_dob)
     st.write("Contact: ", patient_number)
     st.write("Email: ", patient_email)
+    st.write("Medical history:", [record.diagnostic for record in current_patient.get_medical_history()])
 
     st.divider()
     st.subheader("My Appointments")

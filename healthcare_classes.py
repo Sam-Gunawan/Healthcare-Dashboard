@@ -4,6 +4,12 @@ import streamlit as st
 import pandas as pd
 import random as rand
 
+PATIENTS_FILE = "./dataset/patients.csv"
+DOCTORS_FILE = "./dataset/doctors.csv"
+APPOINTMENTS_FILE = "./dataset/appointments.csv"
+PATIENT_MEDICAL_HISTORY_FILE = "./dataset/patient_medical_history.csv"
+APPOINTMENT_ASSIGNMENT_FILE = "./dataset/patient_appointment_doctor.csv"
+
 class Person:
     def __init__(self, name: str, gender: str = "", email: str = "", date_of_birth: str = "", phone_number: int = ""):
         self.name = name
@@ -99,12 +105,14 @@ test_med_record2 = MedicalRecord("Flu", "Fever, fatigue", "Prescribed high vitam
 # print(test_med_record.summary())
 
 class Patient(Person):
-    def __init__(self, name: str, email: str, gender: str, date_of_birth: str, phone_number: str, medical_history: list[MedicalRecord], patient_id: str = ""):
+    def __init__(self, name: str, email: str, gender: str, date_of_birth: str, phone_number: str, medical_history: list[MedicalRecord]="", patient_id: str = ""):
         super().__init__(name, gender, email, date_of_birth, phone_number)
-        self.medical_history = medical_history
-
         self.patient_df = pd.read_csv("./dataset/patients.csv", sep=';')
         self.patient_id = patient_id
+
+        saved_medical_history = self.get_medical_history()
+        if saved_medical_history == []:
+            self.medical_history = medical_history
 
     def generate_id(self):
         new_index = len(self.patient_df) + 1
@@ -126,6 +134,17 @@ class Patient(Person):
         new_patient_df.to_csv("./dataset/patients.csv", mode='a', index=False, header=False, sep=';')
 
         return new_id
+    
+    def get_medical_history(self):
+        medical_history = []
+        history_df = pd.read_csv(PATIENT_MEDICAL_HISTORY_FILE, sep=';')
+        patient_history = history_df[history_df['patient_id'] == self.patient_id]
+
+        for _, row in patient_history.iterrows():
+            record = MedicalRecord(row['medical_history'], "", "")
+            medical_history.append(record)
+
+        return medical_history
 
     def read_medical_history(self):
         readable_history = ""
@@ -178,13 +197,21 @@ class Patient(Person):
         new_assigned_doctor_df = pd.DataFrame(new_assigned_doctor)
         new_assigned_doctor_df.to_csv("./dataset/patient_appointment_doctor.csv", mode='a', index=False, header=False, sep=';')
 
-    def reschedule_appointment(self, appointment_id: str, new_date: str):
-        pass
-        # TODO
-
     def add_medical_history(self, medical_record: MedicalRecord):
-        pass
-        # TODO
+        # Load the medical history CSV
+        history_df = pd.read_csv(PATIENT_MEDICAL_HISTORY_FILE, sep=';')
+
+        # Append new record
+        new_record = {
+            'patient_id': self.patient_id,
+            'medical_history': medical_record.diagnostic,
+            'Symptoms': medical_record.symptoms,
+            'Treatment': medical_record.treatment
+        }
+        history_df = pd.concat([history_df, pd.DataFrame([new_record])], ignore_index=True)
+
+        # Save the updated file
+        history_df.to_csv(PATIENT_MEDICAL_HISTORY_FILE, sep=';', index=False)
 
     def __str__(self):
         return f"""
@@ -194,9 +221,9 @@ Medical history: {self.read_medical_history()}"""
 # test_med_history = []
 test_med_history = [test_med_record, test_med_record2]
 
-test_patient = Patient("Sam", "email", "male", "0812", 62811, "P001", test_med_history)
+# test_patient = Patient("Sam", "email", "male", "0812", 62811, "P001", test_med_history)
 # print(test_patient) 
 
-test_new_patient = Patient("Dory", "email", "female", "121212", "1212", [])
+# test_new_patient = Patient("Dory", "email", "female", "121212", "1212", [])
 # print(test_new_patient.generate_id())
 # print(test_new_patient)
