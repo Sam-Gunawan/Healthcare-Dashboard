@@ -24,8 +24,7 @@ test_person = Person("Evan", "email", "male", "1212")
 # print(test_person)
 
 class Appointment:
-    def __init__(self, appointment_id: str, appointment_date: date, status: bool, complaint: str, symptoms: str = "[TBA]", diagnose: str = "[TBA]", treatment: str = "[TBA]"):
-        self.appointment_id = appointment_id
+    def __init__(self, appointment_date: date, status: bool, complaint: str, symptoms: str = "[TBA]", diagnose: str = "[TBA]", treatment: str = "[TBA]"):
         self.appointment_date = appointment_date
         self.status = status
         self.complaint = complaint
@@ -33,14 +32,36 @@ class Appointment:
         self.diagnose = diagnose
         self.treatment = treatment 
 
+        self.appointment_df = pd.read_csv("./dataset/appointments.csv", sep=';')
+        self.appointment_id = self.generate_id(self.appointment_df)
+    
+    def generate_id(self, appointment_df: pd.DataFrame):
+        # find number of current rows and format it to be "A..." with the current appointment to be [number of rows + 1] incl. leading zeros (3 digits)
+        new_index = len(appointment_df) + 1
+        return "A" + f"{new_index:03}"
+
+    def __str__(self):
+        return f"""Appointment ID: {self.appointment_id}
+Date: {self.appointment_date}
+Status: {self.status}
+Complaints: {self.complaint}
+Symptoms: {self.symptoms}
+Diagnose: {self.diagnose}
+Treatment: {self.treatment}"""
+
+today = date.today()
+test_appointment = Appointment(today, 0, "This is a complaint")
+# print(test_appointment)
+
+
 class Doctor(Person):
-    def __init__(self, name: str, office: str, email: str = "", gender: str = "", date_of_birth: str = "", phone_number:str = "", doctor_id: str = "", specialization: str = ""):
+    def __init__(self, name: str, doctor_id: str, specialization: str, office: str, email: str = "", gender: str = "", date_of_birth: str = "", phone_number:str = ""):
         super().__init__(name, email, gender, date_of_birth, phone_number)
         self.doctor_id = doctor_id
         self.specialization = specialization
         self.office = office
     
-    def finish_appointment(self, illness: str, symptoms: str, treatment: str):
+    def complete_appointment(self, illness: str, symptoms: str, treatment: str):
         pass
         # TODO
 
@@ -71,8 +92,14 @@ test_med_record2 = MedicalRecord("Flu", "Fever, fatigue", "Prescribed high vitam
 class Patient(Person):
     def __init__(self, name: str, email: str, gender: str, date_of_birth: str, phone_number: str, patient_id: str, medical_history: list[MedicalRecord]):
         super().__init__(name, gender, email, date_of_birth, phone_number)
-        self.patient_id = patient_id
         self.medical_history = medical_history
+
+        self.patient_df = pd.read_csv("./dataset/patients.csv", sep=';')
+        self.patient_id = patient_id
+
+    def generate_id(self, patient_df: pd.DataFrame):
+        new_index = len(patient_df) + 1
+        return "P" + f"{new_index:03}"
 
     def read_medical_history(self):
         readable_history = ""
@@ -103,13 +130,13 @@ class Patient(Person):
         treatment = appointment_request.treatment
 
         new_appointment = {
-            "Appointment ID": appointment_id,
-            "Date": date,
-            "Status": status,
-            "Complaints": complaint,
-            "Symptoms": symptoms,
-            "Diagnostic": diagnostic,
-            "Treatment": treatment
+            "Appointment ID": [appointment_id],
+            "Date": [date],
+            "Status": [status],
+            "Complaints": [complaint],
+            "Symptoms": [symptoms],
+            "Diagnostic": [diagnostic],
+            "Treatment": [treatment]
         }
 
         new_appointment_df = pd.DataFrame(new_appointment)
@@ -117,9 +144,9 @@ class Patient(Person):
 
         randomly_assigned_doctor = "D00" + str(rand.randint(1, 6))
         new_assigned_doctor = {
-            "patient_id": self.patient_id,
-            "appointment_id": appointment_id,
-            "doctor_id": randomly_assigned_doctor
+            "patient_id": [self.patient_id],
+            "appointment_id": [appointment_id],
+            "doctor_id": [randomly_assigned_doctor]
         }
 
         new_assigned_doctor_df = pd.DataFrame(new_assigned_doctor)
@@ -142,42 +169,4 @@ Medical history: {self.read_medical_history()}"""
 test_med_history = [test_med_record, test_med_record2]
 
 test_patient = Patient("Sam", "email", "male", "0812", 62811, "P001", test_med_history)
-# print(test_patient)
-
-class AppointmentDetail:
-    def __init__(self, patient: Patient, appointment_id: str, appointment_date: str, complaint: str):
-        self.patient = patient
-        self.appointment_id = appointment_id
-        self.appointment_date = appointment_date
-        self.complaint = complaint
-
-    def set_appointment_date(self, new_date):
-        self.appointment_date = new_date
-    
-    def summary(self):
-        return f"""Patient ID: {self.patient.patient_id}
-Appointment ID: {self.appointment_id}
-Date: {self.appointment_date}
-Complaint: {self.complaint}"""
-    
-test_appointment_detail = AppointmentDetail(test_patient, "A001", "1234", "My head is dizzy")
-# print(test_appointment_detail.summary())
-
-class AppointmentResult:
-    def __init__(self, doctor: Doctor, appointment_detail: AppointmentDetail, illness: str, symptoms: str, treatment: str):
-        self.doctor = doctor
-        self.appointment_detail = appointment_detail
-        self.illness = illness
-        self.symptoms = symptoms
-        self.treatment = treatment
-
-    def summary(self):
-        return f"""{self.appointment_detail.summary()}
----Results---
-Doctor: {self.doctor.doctor_id}
-Illness: {self.illness}
-Symptoms: {self.symptoms}
-Treatment: {self.treatment}"""
-    
-test_appointment = AppointmentResult(test_doctor, test_appointment_detail, "Diare", "Poop 10x a day", "Diapet")
-# print(test_appointment.summary())   
+# print(test_patient) 

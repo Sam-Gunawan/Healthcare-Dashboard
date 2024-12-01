@@ -3,14 +3,6 @@ from healthcare_classes import *
 import pandas as pd
 import datetime as dt
 
-def app():
-    if "current_page" not in st.session_state:
-        st.session_state.current_page = "input_patient_profile"
-
-    if st.session_state.current_page == "input_patient_profile":
-        sign_up()
-    elif st.session_state.current_page == "request_appointment":
-        appointment_form()
 
 def sign_up():
     st.title('Welcome to :blue[Health First]')
@@ -30,6 +22,7 @@ def sign_up():
         elif not patient_email:
             st.error("Email Address is required!")
         else:
+            # TODO: all checks valid, add patient to database
             st.session_state.current_page = "request_appointment"
 
     return patient_name, patient_gender, patient_dob, patient_number, patient_email
@@ -37,7 +30,6 @@ def sign_up():
 def run_patient_dashboard(patient_id):
     # search for patient data in dataframe
     patient_data = df[(df['Patient ID'].str.upper() == patient_id.upper())].values
-    
     
     patient_id = patient_data[0][0]
     patient_name = patient_data[0][1]
@@ -67,7 +59,6 @@ def run_patient_dashboard(patient_id):
     
     if st.session_state.new_appointment_button:
         appointment_form(current_patient)
-
 
 def get_patient_appointment_details(patient_id, patients_file, appointments_file, patient_appointments_file, doctors_file):
     # Load all CSV files into DataFrames
@@ -124,8 +115,7 @@ def login(df):
     else:
         if patient_id != "":
             st.error(f"No patient with ID: {patient_id.upper()} exists!")
-        
-
+      
 def appointment_form(current_patient: Patient):
     st.divider()
     st.title('Appointment Request Form')
@@ -133,20 +123,19 @@ def appointment_form(current_patient: Patient):
 
     appointment_date = st.date_input('Please choose the available date', format="MM/DD/YYYY")
     complaint = st.text_input('Describe how you feel')
-    appointment_id = 1 # TODO: automate appointment id
 
     if st.button('Save Appointment'):
         if not complaint:
             st.error("Please fill in your complaint!")
         else:
-            appointment_request = Appointment(appointment_id, appointment_date, 0, complaint)
+            appointment_request = Appointment(appointment_date, 0, complaint)
             current_patient.add_appointment(appointment_request)
             st.success('Your appointment has been saved!')
             # reset appointment form button
             st.session_state.new_appointment_button = False
             return appointment_request
 
-# app()
+# ------------------------------------
 
 st.set_page_config(page_title="Health First Patient", layout="centered")
 st.title("Patient Dashboard")
@@ -166,6 +155,8 @@ with col1:
 with col2:
     if st.button("I'm new"):
         st.session_state.button_pressed = "new"
+
+        # reset new appointment button when switched to signup page
         st.session_state.new_appointment_button = False
 
 st.divider()
