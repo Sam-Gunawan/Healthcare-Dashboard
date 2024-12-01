@@ -218,12 +218,96 @@ class Patient(Person):
 Patient ID: {self.patient_id} {super().__str__()}
 Medical history: {self.read_medical_history()}"""
     
-# test_med_history = []
-test_med_history = [test_med_record, test_med_record2]
+class AppointmentAssignment:
+    def __init__(self, patient: Patient, doctor: Doctor, appointment: Appointment):
+        self.patient = patient
+        self.doctor = doctor
+        self.appointment = appointment
+    
+    def get_patient_appointment_details(self, patient_id, patients_file, appointments_file, patient_appointments_file, doctors_file):
+        # Load all CSV files into DataFrames
+        patients_df = pd.read_csv(patients_file, sep=";")
+        appointments_df = pd.read_csv(appointments_file, sep=";")
+        patient_appointments_df = pd.read_csv(patient_appointments_file, sep=";")
+        doctors_df = pd.read_csv(doctors_file, sep=";")
+        
+        # Filter patient data
+        patient_info = patients_df[patients_df['Patient ID'].str.upper() == patient_id.upper()]
+        if patient_info.empty:
+            return f"No patient found with ID {patient_id}."
+        
+        # Merge patient_appointments with appointments to get appointment details
+        merged_appointments = pd.merge(patient_appointments_df, appointments_df, left_on="appointment_id", right_on="Appointment ID")
+        
+        # Further merge with doctors to get doctor's name
+        merged_data = pd.merge(merged_appointments, doctors_df, left_on="doctor_id", right_on="Doctor ID")
+        
+        # Filter for the given patient ID
+        patient_appointments = merged_data[merged_data['patient_id'].str.upper() == patient_id.upper()]
+        
+        # Check if any appointments exist for the patient
+        if patient_appointments.empty:
+            return "empty"
+        
+        # Extract relevant columns and patient details
+        patient_name = patient_info.iloc[0]['Name']
+        details = []
+        for _, row in patient_appointments.iterrows():
+            detail = {
+                "Patient Name": patient_name,
+                "Appointment ID": row["Appointment ID"],
+                "Status": row["Status"].title(),
+                "Date": row["Date"],
+                "Complaint": row['Complaints'],
+                "Diagnosis": row["Diagnostic"] if row["Diagnostic"] != "[TBA]" else "Not Available",
+                "Symptoms": row["Symptoms"] if row["Symptoms"] != "[TBA]" else "Not Available",
+                "Treatment": row["Treatment"] if row["Treatment"] != "[TBA]" else "Not Available",
+                "Doctor Name": row["Name"],
+            }
+            details.append(detail)
 
-# test_patient = Patient("Sam", "email", "male", "0812", 62811, "P001", test_med_history)
-# print(test_patient) 
+        return details
 
-# test_new_patient = Patient("Dory", "email", "female", "121212", "1212", [])
-# print(test_new_patient.generate_id())
-# print(test_new_patient)
+    def get_doctor_appointment_details(self, doctor_id, patients_file, appointments_file, doctor_appointments_file, doctors_file):
+        # load all CSV files into DataFrames
+        patients_df = pd.read_csv(patients_file, sep=";")
+        appointments_df = pd.read_csv(appointments_file, sep=";")
+        doctor_appointments_df = pd.read_csv(doctor_appointments_file, sep=";")
+        doctors_df = pd.read_csv(doctors_file, sep=";")
+        
+        # filter doctor data
+        doctor_info = doctors_df[doctors_df['Doctor ID'].str.upper() == doctor_id.upper()]
+        if doctor_info.empty:
+            return f"No doctor found with ID {doctor_id}."
+        
+        # merge doctor_appointments with appointments to get appointment details
+        merged_appointments = pd.merge(doctor_appointments_df, appointments_df, left_on="appointment_id", right_on="Appointment ID")
+        
+        # further merge with patients to get patient's name
+        merged_data = pd.merge(merged_appointments, patients_df, left_on="patient_id", right_on="Patient ID")
+        
+        # filter for the given doctor ID
+        doctor_appointments = merged_data[merged_data['doctor_id'].str.upper() == doctor_id.upper()]
+        
+        # check if any appointments exist for the doctor
+        if doctor_appointments.empty:
+            return "empty"
+        
+        # extract relevant columns and doctor details
+        doctor_name = doctor_info.iloc[0]['Name']
+        details = []
+        for _, row in doctor_appointments.iterrows():
+            detail = {
+                "Doctor Name": doctor_name,
+                "Patient Name": row["Name"],
+                "Appointment ID": row["Appointment ID"],
+                "Status": row["Status"].title(),
+                "Date": row["Date"],
+                "Complaint": row['Complaints'],
+                "Diagnosis": row["Diagnostic"] if row["Diagnostic"] != "[TBA]" else "Not Available",
+                "Symptoms": row["Symptoms"] if row["Symptoms"] != "[TBA]" else "Not Available",
+                "Treatment": row["Treatment"] if row["Treatment"] != "[TBA]" else "Not Available",
+            }
+            details.append(detail)
+
+        return details
