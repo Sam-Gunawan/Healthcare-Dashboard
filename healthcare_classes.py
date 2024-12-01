@@ -1,6 +1,8 @@
 """The collection of class definitions for the healthcare management system"""
 from datetime import date
 import streamlit as st
+import pandas as pd
+import random as rand
 
 class Person:
     def __init__(self, name: str, email: str = "", gender: str = "", date_of_birth: str = "", phone_number: int = ""):
@@ -20,6 +22,16 @@ Phone: {self.phone_number}"""
     
 test_person = Person("Evan", "email", "male", "1212")
 # print(test_person)
+
+class Appointment:
+    def __init__(self, appointment_id: str, appointment_date: date, status: bool, complaint: str, symptoms: str = "[TBA]", diagnose: str = "[TBA]", treatment: str = "[TBA]"):
+        self.appointment_id = appointment_id
+        self.appointment_date = appointment_date
+        self.status = status
+        self.complaint = complaint
+        self.symptoms = symptoms
+        self.diagnose = diagnose
+        self.treatment = treatment 
 
 class Doctor(Person):
     def __init__(self, name: str, office: str, email: str = "", gender: str = "", date_of_birth: str = "", phone_number:str = "", doctor_id: str = "", specialization: str = ""):
@@ -81,15 +93,43 @@ class Patient(Person):
 
         return readable_history
     
-    def make_appointment(self, date: str, complaint: str):
-        pass
-        # TODO
+    def add_appointment(self, appointment_request: Appointment):
+        appointment_id = appointment_request.appointment_id
+        date = appointment_request.appointment_date
+        status = "pending" if not appointment_request.status else "completed"
+        complaint = appointment_request.complaint
+        symptoms = appointment_request.symptoms
+        diagnostic = appointment_request.diagnose
+        treatment = appointment_request.treatment
+
+        new_appointment = {
+            "Appointment ID": appointment_id,
+            "Date": date,
+            "Status": status,
+            "Complaints": complaint,
+            "Symptoms": symptoms,
+            "Diagnostic": diagnostic,
+            "Treatment": treatment
+        }
+
+        new_appointment_df = pd.DataFrame(new_appointment)
+        new_appointment_df.to_csv("./dataset/appointments.csv", mode='a', index=False, header=False, sep=';')
+
+        randomly_assigned_doctor = "D00" + str(rand.randint(1, 6))
+        new_assigned_doctor = {
+            "patient_id": self.patient_id,
+            "appointment_id": appointment_id,
+            "doctor_id": randomly_assigned_doctor
+        }
+
+        new_assigned_doctor_df = pd.DataFrame(new_assigned_doctor)
+        new_assigned_doctor_df.to_csv("./dataset/patient_appointment_doctor.csv", mode='a', index=False, header=False, sep=';')
 
     def reschedule_appointment(self, appointment_id: str, new_date: str):
         pass
         # TODO
 
-    def add_patient_history(self, illness: str, symptoms: str, treatment: str):
+    def add_medical_history(self, medical_record: MedicalRecord):
         pass
         # TODO
 
@@ -140,14 +180,4 @@ Symptoms: {self.symptoms}
 Treatment: {self.treatment}"""
     
 test_appointment = AppointmentResult(test_doctor, test_appointment_detail, "Diare", "Poop 10x a day", "Diapet")
-# print(test_appointment.summary())
-
-class Appointment:
-    def __init__(self, appointment_id: str, appointment_date: date, status: bool, complaint: str, symptoms: str = "", diagnose: str = "", treatment: str = ""):
-        self.appointment_id = appointment_id
-        self.appointment_date = appointment_date
-        self.status = status
-        self.complaint = complaint
-        self.symptoms = symptoms
-        self.diagnose = diagnose
-        self.treatment = treatment    
+# print(test_appointment.summary())   

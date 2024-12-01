@@ -46,6 +46,8 @@ def run_patient_dashboard(patient_id):
     patient_number = patient_data[0][4]
     patient_email = patient_data[0][5]
 
+    current_patient = Patient(patient_name, patient_email, patient_gender, patient_dob, patient_number, patient_id, [""]) # TODO: implement medical history
+
     st.subheader("Profile")
     st.write("Patient ID: ", patient_id)
     st.write("Name: ", patient_name)
@@ -60,14 +62,11 @@ def run_patient_dashboard(patient_id):
     for appointment in appointments:
         st.write(appointment)
     
-    if "new_appointment_button" not in st.session_state:
-        st.session_state.new_appointment_button = False
-    
     if st.button("Make an appointment!"):
         st.session_state.new_appointment_button = True
     
     if st.session_state.new_appointment_button:
-        appointment_form(patient_id)
+        appointment_form(current_patient)
 
 
 def get_patient_appointment_details(patient_id, patients_file, appointments_file, patient_appointments_file, doctors_file):
@@ -116,7 +115,7 @@ def get_patient_appointment_details(patient_id, patients_file, appointments_file
 def login(df):
     st.title("Welcome back to :blue[Health First]")
     patient_id = st.text_input("Login with ID", value="")
-
+    
     # check if ID exists
     patient_exists = not df[(df['Patient ID'].str.upper() == patient_id.upper())].empty
 
@@ -125,22 +124,27 @@ def login(df):
     else:
         if patient_id != "":
             st.error(f"No patient with ID: {patient_id.upper()} exists!")
+        
 
-def appointment_form(patient_id):
+def appointment_form(current_patient: Patient):
     st.divider()
     st.title('Appointment Request Form')
     st.write('Please proceed with your appointment request.')
 
     appointment_date = st.date_input('Please choose the available date', format="MM/DD/YYYY")
-    complaint = st.text_input('Please tell us what you are feeling')
+    complaint = st.text_input('Describe how you feel')
     appointment_id = 1 # TODO: automate appointment id
 
     if st.button('Save Appointment'):
         if not complaint:
-            st.error("Please describe your complaints!")
+            st.error("Please fill in your complaint!")
         else:
-            appointment_request = Appointment(appointment_id, appointment_date, complaint)
+            appointment_request = Appointment(appointment_id, appointment_date, 0, complaint)
+            current_patient.add_appointment(appointment_request)
             st.success('Your appointment has been saved!')
+            # reset appointment form button
+            st.session_state.new_appointment_button = False
+            return appointment_request
 
 # app()
 
@@ -152,6 +156,9 @@ df = pd.read_csv("./dataset/patients.csv", sep=';')
 if "button_pressed" not in st.session_state:
     st.session_state.button_pressed = None
 
+if "new_appointment_button" not in st.session_state:
+        st.session_state.new_appointment_button = False
+
 col1, col2 = st.columns([1,5])
 with col1:
     if st.button("I'm a patient"):
@@ -159,6 +166,7 @@ with col1:
 with col2:
     if st.button("I'm new"):
         st.session_state.button_pressed = "new"
+        st.session_state.new_appointment_button = False
 
 st.divider()
 
