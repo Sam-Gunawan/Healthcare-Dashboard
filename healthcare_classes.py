@@ -5,10 +5,10 @@ import pandas as pd
 import random as rand
 
 class Person:
-    def __init__(self, name: str, email: str = "", gender: str = "", date_of_birth: str = "", phone_number: int = ""):
+    def __init__(self, name: str, gender: str = "", email: str = "", date_of_birth: str = "", phone_number: int = ""):
         self.name = name
-        self.email = email
         self.gender = gender
+        self.email = email
         self.date_of_birth = date_of_birth
         self.phone_number = phone_number
     
@@ -56,7 +56,7 @@ test_appointment = Appointment(today, 0, "This is a complaint")
 
 class Doctor(Person):
     def __init__(self, name: str, doctor_id: str, specialization: str, office: str, email: str = "", gender: str = "", date_of_birth: str = "", phone_number:str = ""):
-        super().__init__(name, email, gender, date_of_birth, phone_number)
+        super().__init__(name, gender, email, date_of_birth, phone_number)
         self.doctor_id = doctor_id
         self.specialization = specialization
         self.office = office
@@ -90,16 +90,33 @@ test_med_record2 = MedicalRecord("Flu", "Fever, fatigue", "Prescribed high vitam
 # print(test_med_record.summary())
 
 class Patient(Person):
-    def __init__(self, name: str, email: str, gender: str, date_of_birth: str, phone_number: str, patient_id: str, medical_history: list[MedicalRecord]):
+    def __init__(self, name: str, email: str, gender: str, date_of_birth: str, phone_number: str, medical_history: list[MedicalRecord], patient_id: str = ""):
         super().__init__(name, gender, email, date_of_birth, phone_number)
         self.medical_history = medical_history
 
         self.patient_df = pd.read_csv("./dataset/patients.csv", sep=';')
         self.patient_id = patient_id
 
-    def generate_id(self, patient_df: pd.DataFrame):
-        new_index = len(patient_df) + 1
+    def generate_id(self):
+        new_index = len(self.patient_df) + 1
         return "P" + f"{new_index:03}"
+
+    def add_account(self):
+        new_id = self.generate_id()
+        self.patient_id = new_id
+        new_patient = {
+            "Patient ID": [self.patient_id],
+            "Name": [self.name.title()],
+            "Gender": [self.gender],
+            "Date of Birth": [self.date_of_birth],
+            "Contact": [self.phone_number],
+            "Email": [self.email]
+        }
+
+        new_patient_df = pd.DataFrame(new_patient)
+        new_patient_df.to_csv("./dataset/patients.csv", mode='a', index=False, header=False, sep=';')
+
+        return new_id
 
     def read_medical_history(self):
         readable_history = ""
@@ -170,3 +187,7 @@ test_med_history = [test_med_record, test_med_record2]
 
 test_patient = Patient("Sam", "email", "male", "0812", 62811, "P001", test_med_history)
 # print(test_patient) 
+
+test_new_patient = Patient("Dory", "email", "female", "121212", "1212", [])
+print(test_new_patient.generate_id())
+print(test_new_patient)

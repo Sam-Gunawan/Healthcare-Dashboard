@@ -2,13 +2,14 @@ import streamlit as st
 from healthcare_classes import *
 import pandas as pd
 import datetime as dt
-
+import time
 
 def sign_up():
+    today = dt.date.today()
     st.title('Welcome to :blue[Health First]')
     patient_name = st.text_input('Name')
     patient_gender = st.selectbox('Gender', ['Male', 'Female'])
-    patient_dob = st.date_input('Date of Birth')
+    patient_dob = st.date_input('Date of Birth', min_value=today-dt.timedelta(weeks=2000), max_value=today).strftime("%m/%d/%Y")
     patient_number = st.text_input('Contact Number') 
     patient_email = st.text_input('Email Address')
 
@@ -23,7 +24,11 @@ def sign_up():
             st.error("Email Address is required!")
         else:
             # TODO: all checks valid, add patient to database
-            st.session_state.current_page = "request_appointment"
+            # new patient has no medical history
+            new_patient = Patient(patient_name, patient_email, patient_gender, patient_dob, patient_number, [])
+            new_id = new_patient.add_account()
+            st.success(f"Account created! You can now login using the ID: {new_id}.")
+
 
     return patient_name, patient_gender, patient_dob, patient_number, patient_email
 
@@ -38,7 +43,7 @@ def run_patient_dashboard(patient_id):
     patient_number = patient_data[0][4]
     patient_email = patient_data[0][5]
 
-    current_patient = Patient(patient_name, patient_email, patient_gender, patient_dob, patient_number, patient_id, [""]) # TODO: implement medical history
+    current_patient = Patient(patient_name, patient_email, patient_gender, patient_dob, patient_number, [""], patient_id) # TODO: implement medical history
 
     st.subheader("Profile")
     st.write("Patient ID: ", patient_id)
@@ -51,8 +56,11 @@ def run_patient_dashboard(patient_id):
     st.divider()
     st.subheader("My Appointments")
     appointments = get_patient_appointment_details(patient_id, "./dataset/patients.csv", "./dataset/appointments.csv", "./dataset/patient_appointment_doctor.csv", "./dataset/doctors.csv")
-    for appointment in appointments:
-        st.write(appointment)
+    if appointments == "empty":
+        st.markdown(f"No appointments found for {patient_name}.")
+    else:
+        for appointment in appointments:
+            st.write(appointment)
     
     if st.button("Make an appointment!"):
         st.session_state.new_appointment_button = True
@@ -83,7 +91,7 @@ def get_patient_appointment_details(patient_id, patients_file, appointments_file
     
     # Check if any appointments exist for the patient
     if patient_appointments.empty:
-        return f"No appointments found for patient ID {patient_id}."
+        return "empty"
     
     # Extract relevant columns and patient details
     patient_name = patient_info.iloc[0]['Name']
@@ -94,6 +102,7 @@ def get_patient_appointment_details(patient_id, patients_file, appointments_file
             "Appointment ID": row["Appointment ID"],
             "Status": row["Status"].title(),
             "Date": row["Date"],
+            "Complaint": row['Complaints'],
             "Diagnosis": row["Diagnostic"] if row["Diagnostic"] != "[TBA]" else "Not Available",
             "Symptoms": row["Symptoms"] if row["Symptoms"] != "[TBA]" else "Not Available",
             "Treatment": row["Treatment"] if row["Treatment"] != "[TBA]" else "Not Available",
@@ -124,15 +133,26 @@ def appointment_form(current_patient: Patient):
     appointment_date = st.date_input('Please choose the available date', format="MM/DD/YYYY").strftime("%m/%d/%Y")
     complaint = st.text_input('Describe how you feel')
 
-    if st.button('Save Appointment'):
+    if st.button('Create Appointment'):
         if not complaint:
             st.error("Please fill in your complaint!")
         else:
             appointment_request = Appointment(appointment_date, 0, complaint)
             current_patient.add_appointment(appointment_request)
-            st.success('Your appointment has been saved!')
+
             # reset appointment form button
             st.session_state.new_appointment_button = False
+            
+            # play loading bar for ux purposes before refreshing the page and updating appointments
+            progress_text = "Creating your appointment. Please wait."
+            saving_appointment_bar = st.progress(0, text=progress_text)
+            for perent_complete in range(100):
+                time.sleep(0.02)
+                saving_appointment_bar.progress(perent_complete + 1, text=progress_text)
+            time.sleep(0.5)
+            st.success('Your appointment has been saved!')
+            time.sleep(1.5)
+            st.rerun()
             return appointment_request
 
 # ------------------------------------
