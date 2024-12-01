@@ -24,12 +24,12 @@ test_person = Person("Evan", "email", "male", "1212")
 # print(test_person)
 
 class Appointment:
-    def __init__(self, appointment_date: date, status: bool, complaint: str, symptoms: str = "[TBA]", diagnose: str = "[TBA]", treatment: str = "[TBA]"):
+    def __init__(self, appointment_date: date, status: bool, complaint: str, symptoms: str = "[TBA]", diagnosis: str = "[TBA]", treatment: str = "[TBA]"):
         self.appointment_date = appointment_date
         self.status = status
         self.complaint = complaint
         self.symptoms = symptoms
-        self.diagnose = diagnose
+        self.diagnosis = diagnosis
         self.treatment = treatment 
 
         self.appointment_df = pd.read_csv("./dataset/appointments.csv", sep=';')
@@ -46,7 +46,7 @@ Date: {self.appointment_date}
 Status: {self.status}
 Complaints: {self.complaint}
 Symptoms: {self.symptoms}
-Diagnose: {self.diagnose}
+diagnosis: {self.diagnosis}
 Treatment: {self.treatment}"""
 
 today = date.today()
@@ -61,9 +61,18 @@ class Doctor(Person):
         self.specialization = specialization
         self.office = office
     
-    def complete_appointment(self, illness: str, symptoms: str, treatment: str):
-        pass
-        # TODO
+    def complete_appointment(self, appointment_file, appointment_id: str, diagnostic: str, symptoms: str, treatment: str):
+        new_medical_record = MedicalRecord(diagnostic, symptoms, treatment)
+        df = pd.read_csv(appointment_file, sep=';')
+        df.loc[df["Appointment ID"] == appointment_id, "Status"] = "completed"
+        df.loc[df["Appointment ID"] == appointment_id, "Diagnostic"] = diagnostic
+        df.loc[df["Appointment ID"] == appointment_id, "Symptoms"] = symptoms
+        df.loc[df["Appointment ID"] == appointment_id, "Treatment"] = treatment
+
+        st.write(df)
+        df.to_csv(appointment_file, sep=';', index=False)
+
+        return new_medical_record
 
     def __str__(self):
         return f"""
@@ -75,13 +84,13 @@ test_doctor = Doctor("Jorel", "email", "male", "0812", 62811, "D001", "Neurology
 # print(test_doctor)
 
 class MedicalRecord:
-    def __init__(self, illness: str, symptoms: str, treatment: str):
-        self.illness = illness
+    def __init__(self, diagnostic: str, symptoms: str, treatment: str):
+        self.diagnostic = diagnostic
         self.symptoms = symptoms
         self.treatment = treatment
 
     def summary(self):
-        return f"""Illness: {self.illness}
+        return f"""diagnostic: {self.diagnostic}
 Symptoms: {self.symptoms}
 Treatment: {self.treatment}"""
     
@@ -126,14 +135,14 @@ class Patient(Person):
             return "No history"
         # if only 1 record exist, just return the medical record instantly
         elif len(self.medical_history) == 1:
-            return self.medical_history[0].illness
+            return self.medical_history[0].diagnostic
 
         for medical_record in self.medical_history[:-1]:
             # concatenate medical records up till the second last record using commas to separate them.
-            readable_history += f"{medical_record.illness}, "
+            readable_history += f"{medical_record.diagnostic}, "
 
         # add the last record without having to add another comma
-        readable_history += self.medical_history[-1].illness
+        readable_history += self.medical_history[-1].diagnostic
 
         return readable_history
     
@@ -143,7 +152,7 @@ class Patient(Person):
         status = "pending" if not appointment_request.status else "completed"
         complaint = appointment_request.complaint
         symptoms = appointment_request.symptoms
-        diagnostic = appointment_request.diagnose
+        diagnostic = appointment_request.diagnosis
         treatment = appointment_request.treatment
 
         new_appointment = {
@@ -189,5 +198,5 @@ test_patient = Patient("Sam", "email", "male", "0812", 62811, "P001", test_med_h
 # print(test_patient) 
 
 test_new_patient = Patient("Dory", "email", "female", "121212", "1212", [])
-print(test_new_patient.generate_id())
-print(test_new_patient)
+# print(test_new_patient.generate_id())
+# print(test_new_patient)

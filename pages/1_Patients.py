@@ -32,7 +32,7 @@ def sign_up():
 
     return patient_name, patient_gender, patient_dob, patient_number, patient_email
 
-def run_patient_dashboard(patient_id):
+def run_patient_dashboard(patient_id, df):
     # search for patient data in dataframe
     patient_data = df[(df['Patient ID'].str.upper() == patient_id.upper())].values
     
@@ -120,7 +120,7 @@ def login(df):
     patient_exists = not df[(df['Patient ID'].str.upper() == patient_id.upper())].empty
 
     if patient_exists:
-        run_patient_dashboard(patient_id)
+        run_patient_dashboard(patient_id, df)
     else:
         if patient_id != "":
             st.error(f"No patient with ID: {patient_id.upper()} exists!")

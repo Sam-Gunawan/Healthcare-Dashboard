@@ -1,6 +1,6 @@
-﻿Appointment ID;Date;Status;Complaints;Symptoms;Diagnostic;Treatment
+Appointment ID;Date;Status;Complaints;Symptoms;Diagnostic;Treatment
 A001;12/20/2024;completed;I am having trouble speaking clearly.;Speech Impairment;Stroke;ACE inhibitors
-A002;12/27/2024;pending;I feel like I can't catch my breath.;[TBA];[TBA];[TBA]
+A002;12/27/2024;completed;I feel like I can't catch my breath.;short of breath, easily tired;obesity;more home exercises
 A003;2/25/2025;completed;I have itchy red patches on my skin.;Skin Rash;Allergic Reaction;anti-inflammatory cream
 A004;2/23/2025;pending;I have a persistent cough.;[TBA];[TBA];[TBA]
 A005;02/11/2025;completed;I have chest pain that won’t go away.;Chest Pain;GERD;anti-inflammatory inhalers.
@@ -29,11 +29,11 @@ A027;1/13/2025;completed;I feel tired even after resting.;Fatigue;Heart Failure;
 A028;12/22/2024;pending;My asthma has been acting up, and I can’t stop coughing.;[TBA];[TBA];[TBA]
 A029;1/19/2025;completed;It’s hard for me to move my muscles.;Limited Mobility;Muscle Dystrophy;Muscle relaxants
 A030;12/01/2024;completed;I feel like the room is spinning.;Diziness;Hypertension;Beta-blockers
-A031;12/02/2024;pending;I feel like throwing up almost every hour of the day;[TBA];[TBA];[TBA]
+A031;12/02/2024;completed;I feel like throwing up almost every hour of the day;asx;asx;asx
 A032;12/24/2024;pending;I can't smell;[TBA];[TBA];[TBA]
 A033;12/01/2024;pending;i feel fine;[TBA];[TBA];[TBA]
 A034;12/01/2024;pending;i dont feel so good;[TBA];[TBA];[TBA]
-A035;12/01/2024;pending;another appointment ya;[TBA];[TBA];[TBA]
+A035;12/01/2024;completed;another appointment ya;fever;tetanus;blood transfusion
 A036;12/01/2024;pending;haloo;[TBA];[TBA];[TBA]
-A037;12/01/2024;pending;wowow;[TBA];[TBA];[TBA]
-A038;12/15/2024;pending;i am iron man;[TBA];[TBA];[TBA]
+A037;12/01/2024;completed;wowow;idk;bird flu;medicine
+A038;12/15/2024;completed;i am iron man;asx;asx;axs
